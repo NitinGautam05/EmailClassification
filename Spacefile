@@ -1,0 +1,4 @@
+# Spacefile for Hugging Face Spaces
+sdk: docker
+app_port: 8000
+healthcheck_path: /health
