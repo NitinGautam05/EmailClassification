@@ -2,6 +2,7 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from typing import List, Dict, Any
 import os
+import re
 
 from utils import PIIMasker, preprocess_email_text
 from models import EmailClassifier
@@ -40,10 +41,21 @@ if not os.path.exists(model_path):
 @app.post("/classify_email", response_model=EmailResponse)
 async def classify_email(request: EmailRequest) -> Dict[str, Any]:
     try:
+        # Validate and sanitize email_body
         email_text = request.email_body
+        if not email_text or not isinstance(email_text, str):
+            raise HTTPException(status_code=422, detail="Invalid email_body: Must be a non-empty string")
+        
+        # Remove problematic control characters
+        email_text = re.sub(r'[\x00-\x1F\x7F]', ' ', email_text)  # Remove ASCII control characters
+        
+        # Preprocess the email text
         preprocessed_text = preprocess_email_text(email_text)
+        
+        # Mask PII and classify
         masked_text, entities = pii_masker.mask_pii(preprocessed_text)
         category = classifier.predict(masked_text)
+        
         return {
             "input_email_body": email_text,
             "list_of_masked_entities": entities,

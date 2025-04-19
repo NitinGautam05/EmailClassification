@@ -4,13 +4,7 @@ import json
 from typing import Dict, List, Tuple, Any
 
 # Load spaCy NER model
-try:
-    nlp = spacy.load("en_core_web_md")
-except:
-    # If model isn't downloaded, download it
-    import subprocess
-    subprocess.run(["python", "-m", "spacy", "download", "en_core_web_md"])
-    nlp = spacy.load("en_core_web_md")
+nlp = spacy.load("en_core_web_md")
 
 class PIIMasker:
     def __init__(self):
@@ -83,16 +77,22 @@ class PIIMasker:
 
 def preprocess_email_text(email_text: str) -> str:
     """
-    Basic preprocessing for email text:
+    Preprocess email text:
     - Remove email headers if present
-    - Normalize whitespace
+    - Normalize whitespace and control characters
     - Remove excessive newlines
     """
     # Remove any potential email headers
     if "\nSubject:" in email_text:
         email_text = email_text.split("\n\n", 1)[-1]
     
-    # Normalize whitespace
+    # Replace control characters (e.g., \r, \t) with a space
+    email_text = re.sub(r'[\r\t]', ' ', email_text)
+    
+    # Normalize multiple newlines to a single newline
+    email_text = re.sub(r'\n+', '\n', email_text)
+    
+    # Normalize whitespace (replace multiple spaces with a single space)
     email_text = re.sub(r'\s+', ' ', email_text)
     
     # Strip leading/trailing whitespace

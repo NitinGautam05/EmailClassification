@@ -8,3 +8,4 @@ nltk==3.8.1
 pydantic==2.5.3
 python-multipart==0.0.6
 gunicorn==21.2.0
+https://github.com/explosion/spacy-models/releases/download/en_core_web_md-3.7.1/en_core_web_md-3.7.1-py3-none-any.whl
