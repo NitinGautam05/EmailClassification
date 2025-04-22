@@ -73,10 +73,11 @@ This project is designed to be easily deployed on Hugging Face Spaces:
 1. Fork this repository to your GitHub account.
 2. Create a new Space on Hugging Face.
 3. Connect your GitHub repository to the Space.
-4. Select "Streamlit" as the Space SDK.
+4. Select "docker" as the Space SDK.
 5. Configure the Space to install all dependencies from `requirements.txt`.
 
 ## API Usage
+## Access the Deployed API: https://nitingautam03-email-classifier.hf.space/docs
 
 ### Classify Email Endpoint
 
