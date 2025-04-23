@@ -15,13 +15,18 @@ import nltk
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 
+# Set NLTK data path to a user-specific directory
+nltk_data_path = os.path.expanduser("~/.nltk_data")
+nltk.data.path.append(nltk_data_path)
+
 try:
     nltk.data.find('corpora/stopwords')
     nltk.data.find('corpora/wordnet')
 except LookupError:
-    nltk.download('stopwords')
-    nltk.download('wordnet')
-    nltk.download('punkt')
+    # Download NLTK data to the specified directory
+    nltk.download('stopwords', download_dir=nltk_data_path)
+    nltk.download('wordnet', download_dir=nltk_data_path)
+    nltk.download('punkt', download_dir=nltk_data_path)
 
 class EmailClassifier:
     def __init__(self, model_path: str = None):
@@ -81,4 +86,3 @@ class EmailClassifier:
         df = df.rename(columns={"email": "email_text", "type": "category"})
         df.dropna(subset=["email_text", "category"], inplace=True)
         self.train(df, "email_text", "category")
-
